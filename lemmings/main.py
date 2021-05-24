@@ -1,11 +1,8 @@
-from definitions import ROOT_DIR
 import pygame
-import os
-from utils.getPathToFileFromFolder import getPathToFileFromFolder
-from time import sleep
-from PIL import Image
+
 from lemming import Lemming
 from level import Level
+from utils.getPathToFileFromFolder import getPathToFileFromFolder
 
 # Размеры окна
 HEIGHT = 800
