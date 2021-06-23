@@ -36,6 +36,8 @@ while running:
     # Держим цикл на правильной скорости
     clock.tick(FPS)
 
+
+
     # Ввод процесса (события)
     for event in pygame.event.get():
         # check for closing window

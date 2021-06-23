@@ -1,13 +1,14 @@
 import pygame
 from definitions import BACKGROUND_COLOUR
+from settingsController import settings
 from utils.getPathToFileFromFolder import getPathToFileFromFolder
 
 
-pygame.mixer.pre_init(44100,-16,1,512)
+pygame.mixer.pre_init(44100,-16,2,512)
 pygame.init()
-s_death = pygame.mixer.Sound('Sounds/Sound_Death.wav')
-block = pygame.mixer.Sound('Sounds/Block.wav')
-
+s_death = pygame.mixer.Sound(getPathToFileFromFolder('./Sounds/Sound_Death.wav'))
+block = pygame.mixer.Sound(getPathToFileFromFolder('./Sounds/Block.wav'))
+pygame.mixer.Sound.set_volume(int(settings.getValue('Volume')))
 
 class Lemming(pygame.sprite.Sprite): # Наследование класс Lemming от класса pygame.sprite.Sprite
     def __init__(self, start_position):
