@@ -3,6 +3,7 @@ import sys
 import os
 from settingsController import settings
 from utils.getPathToFileFromFolder import getPathToFileFromFolder
+import pygame
 
 
 
@@ -10,6 +11,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(805, 563)
+        f = settings.getValue('Volume')
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(getPathToFileFromFolder('./images/img_icon.ico')), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -95,9 +97,9 @@ class Ui_MainWindow(object):
         self.Slider_Volume.setAutoFillBackground(True)
         self.Slider_Volume.setMaximum(100)
         self.Slider_Volume.setSingleStep(1)
-        self.Slider_Volume.setProperty("value", settings.getValue('Volume'))
-        self.Slider_Volume.setValue(settings.getValue('Volume'))
-        self.Slider_Volume.setSliderPosition(settings.getValue('Volume'))
+        self.Slider_Volume.setProperty("value", f)
+        self.Slider_Volume.setValue(f)
+        self.Slider_Volume.setSliderPosition(f)
         self.Slider_Volume.setTracking(True)
         self.Slider_Volume.setOrientation(QtCore.Qt.Horizontal)
         self.Slider_Volume.setInvertedAppearance(False)
@@ -147,7 +149,7 @@ class Ui_MainWindow(object):
         os.system('Help.docx')
 
     def change_value(self):
-        settings.setValue('Volume', self.Slider_Volume.value()/100)
+        settings.setValue('Volume', self.Slider_Volume.value())
         print(settings.getValue('Volume'))
 
 
@@ -155,6 +157,7 @@ class Ui_MainWindow(object):
         import pygame
         from lemming import Lemming
         from level import Level
+        # from final import Final
 
         # Размеры окна
         HEIGHT = 800
@@ -170,17 +173,23 @@ class Ui_MainWindow(object):
 
         start_position = (100, 200)  # Начальная позиция персонажей
         lemmings = pygame.sprite.Group()  # Создание группы для персонажей
-
         player = Lemming(start_position)  # Инит персонажа
         lemmings.add(player)  # Добавление персонажа в группу
+        # finals = Final(WIDTH,HEIGHT)
 
         # Создание уровня
         level = Level(getPathToFileFromFolder('./images/level.png'))
 
+        final = pygame.image.load(getPathToFileFromFolder('./images/final1.png')).convert_alpha()
+        f_rect = final.get_rect(centerx = WIDTH // 2, bottom = HEIGHT - 40)
 
-        # pygame.mixer.music.load(getPathToFileFromFolder('./Sounds/menu_music.mp3'))
-        #
-        # pygame.mixer.music.play(-1)
+        def collide():
+            if f_rect.collidepoint(player.rect.center):
+                print('победа')
+
+        pygame.mixer.music.load(getPathToFileFromFolder('./Sounds/menu_music.mp3'))
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(settings.getValue('Volume')/100)
 
         # Цикл игры
         running = True
@@ -197,14 +206,19 @@ class Ui_MainWindow(object):
                 if event.type == pygame.QUIT:
                     running = False
 
+            collide()
+
             # Отрисовка карты
             level.draw()
+
+            screen.blit(final, f_rect)
 
             # Вызов функции которая просчитывает движение
             lemmings.update()
 
             # Отрисовка лемингов
             lemmings.draw(level.screen)
+
 
             # После отрисовки всего, переворачиваем экран
             pygame.display.flip()

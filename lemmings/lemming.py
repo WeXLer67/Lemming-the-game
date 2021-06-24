@@ -1,6 +1,5 @@
 import pygame
 from definitions import BACKGROUND_COLOUR
-from settingsController import settings
 from utils.getPathToFileFromFolder import getPathToFileFromFolder
 
 
@@ -8,7 +7,6 @@ pygame.mixer.pre_init(44100,-16,2,512)
 pygame.init()
 s_death = pygame.mixer.Sound(getPathToFileFromFolder('./Sounds/Sound_Death.wav'))
 block = pygame.mixer.Sound(getPathToFileFromFolder('./Sounds/Block.wav'))
-pygame.mixer.Sound.set_volume(int(settings.getValue('Volume')))
 
 class Lemming(pygame.sprite.Sprite): # Наследование класс Lemming от класса pygame.sprite.Sprite
     def __init__(self, start_position):
@@ -75,10 +73,10 @@ class Lemming(pygame.sprite.Sprite): # Наследование класс Lemmi
 
                 # Если направление движение вправо
                 if self.direction == 1:
-                    # Брать пиксели справа - self.rect.right и сверху с учетом высоты персонажа. Не помню нахер я добавил (- height), но без этого не работает
+                    # Брать пиксели справа - self.rect.right и сверху с учетом высоты персонажа.
                     positioninfront = (self.rect.right, self.rect.top + (self.rect.height - 1) - height)
                 else:
-                    # Брать пиксели слева - self.rect.left и сверху с учетом высоты персонажа. Не помню нахер я добавил (- height), но без этого не работает
+                    # Брать пиксели слева - self.rect.left и сверху с учетом высоты персонажа.
                     positioninfront = (self.rect.left, self.rect.top + (self.rect.height - 1) - height)
 
                 # Если справа от персонажа не стена, двигаемся в право
@@ -96,3 +94,4 @@ class Lemming(pygame.sprite.Sprite): # Наследование класс Lemmi
             if not found:
                 self.direction *= -1
                 block.play()
+                # print('поражение')
